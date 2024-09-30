@@ -1,0 +1,105 @@
+import os
+
+# Define the filename for the text file
+txt_filename = "data.txt"
+
+# Sample data for T20 cricket players
+t20_data = [
+    "Player, Matches, Runs, Wickets",
+    "Virat Kohli, 97, 3159, 4",
+    "Rohit Sharma, 142, 3853, 1",
+    "KL Rahul, 72, 2265, 0",
+    "Hardik Pandya, 87, 1271, 69",
+    "Jasprit Bumrah, 60, 8, 70",
+    "David Warner, 89, 2674, 0",
+    "AB de Villiers, 78, 1672, 38",
+    "Ben Stokes, 39, 920, 34",
+    "Shane Watson, 58, 4018, 92",
+    "Kane Williamson, 68, 2260, 8",
+    "MS Dhoni, 98, 1617, 0",
+    "Glenn Maxwell, 69, 1952, 28",
+    "Shikhar Dhawan, 69, 1755, 8",
+    "Babar Azam, 99, 2460, 2",
+    "Rassie van der Dussen, 41, 1405, 0",
+]
+
+# Create the text file if it doesn't exist
+if not os.path.exists(txt_filename):
+    with open(txt_filename, "w") as txtfile:
+        txtfile.write("\n".join(t20_data))
+    print(f"Text file '{txt_filename}' created successfully.")
+
+# Load the text data
+def load_txt(filename):
+    data = []
+    with open(filename, "r") as txtfile:
+        lines = txtfile.readlines()
+        for line in lines[1:]:  # Skip header row
+            row = line.strip().split(", ")
+            player = row[0]
+            matches = int(row[1])
+            runs = int(row[2])
+            wickets = int(row[3])
+            data.append({"Player": player, "Matches": matches, "Runs": runs, "Wickets": wickets})
+    return data
+
+# Display the menu and interact with the user
+def display_menu(data):
+    while True:
+        print("\n=== T20 Cricket Data Menu ===")
+        print("1. Show all player statistics")
+        print("2. Calculate total runs by all players")
+        print("3. Calculate total matches played by all players")
+        print("4. Calculate total wickets taken by all players")
+        print("5. Calculate average runs per player")
+        print("6. Calculate average wickets per player")
+        print("7. Find player with the most runs")
+        print("8. Find player with the most wickets")
+        print("9. Find player with the best average runs per match")
+        print("10. Exit")
+        choice = input("Enter your choice (1-10): ")
+
+        if choice == "1":
+            for player in data:
+                print(f"Player: {player['Player']}, Matches: {player['Matches']}, Runs: {player['Runs']}, Wickets: {player['Wickets']}")
+        elif choice == "2":
+            total_runs = sum(player["Runs"] for player in data)
+            print(f"Total runs by all players: {total_runs}")
+        elif choice == "3":
+            total_matches = sum(player["Matches"] for player in data)
+            print(f"Total matches played by all players: {total_matches}")
+        elif choice == "4":
+            total_wickets = sum(player["Wickets"] for player in data)
+            print(f"Total wickets taken by all players: {total_wickets}")
+        elif choice == "5":
+            average_runs = sum(player["Runs"] for player in data) / len(data)
+            print(f"Average runs per player: {average_runs:.2f}")
+        elif choice == "6":
+            average_wickets = sum(player["Wickets"] for player in data) / len(data)
+            print(f"Average wickets per player: {average_wickets:.2f}")
+        elif choice == "7":
+            top_scorer = max(data, key=lambda x: x["Runs"])
+            print(f"Player with the most runs: {top_scorer['Player']} ({top_scorer['Runs']} runs)")
+        elif choice == "8":
+            top_wicket_taker = max(data, key=lambda x: x["Wickets"])
+            print(f"Player with the most wickets: {top_wicket_taker['Player']} ({top_wicket_taker['Wickets']} wickets)")
+        elif choice == "9":
+            best_average_player = max(data, key=lambda x: x["Runs"] / x["Matches"] if x["Matches"] > 0 else 0)
+            print(f"Player with the best average runs per match: {best_average_player['Player']} ({best_average_player['Runs'] / best_average_player['Matches']:.2f} runs per match)")
+        elif choice == "10":
+            print("Exiting the menu. Goodbye!")
+            break
+        else:
+            print("Invalid choice. Please try again.")
+
+# Main function
+def main():
+    # Load data from the text file
+    data = load_txt(txt_filename)
+
+    # Display the interactive menu
+    display_menu(data)
+
+# Run the main function
+if __name__ == "__main__":
+    main()
